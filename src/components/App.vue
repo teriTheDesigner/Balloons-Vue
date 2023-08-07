@@ -8,15 +8,15 @@
 <img alt="balloon-image" v-bind:src="image">
                 </div>
                 <div class="product-info">
-                    <h1>{{ product }}</h1>
-                    <p v-if="inventory > 10">In Stock</p>
-                    <p v-else-if="inventory <= 10 && inventory > 0">Almost Sold Out!</p>
+                    <h1>{{ title }}</h1>
+                    <p v-if="InStock > 10">In Stock</p>
+                    <p v-else-if="InStock <= 10 && InStock > 0">Almost Sold Out!</p>
                     <p v-else>Out of Stock</p>
                     <ul>
                         <li v-for="detail in details">{{ detail }}</li>
                     </ul>
-                    <div :key="variant.id" v-for="variant in variants">{{ variant.color }}</div>
-                    <button v-on:click="addToCart" class="button">Add to Cart</button>
+                    <div  v-for="(variant, index) in variants" :key="variant.id" class="color-circle"  @mouseover="updateVariant(index)" :style="{backgroundColor: variant.color}"></div>
+                    <button  v-on:click="addToCart" class="button" :class="{disabledButton: !InStock}" :disabled="!InStock">Add to Cart</button>
                 </div>
             </div>
         </div>
@@ -29,13 +29,17 @@
     data() {
       return {
         cart: 0,
+        brand : "BreezBalloons",
         product: "Balloon ",
-        image: "src/assets/images/Pink.svg",
-        inventory: 100,
+        selectedVariant: 0,
+     
         details:["Inflatable", "Colorful", "Festive"],
         variants:[
-            {id: 2234, color: 'pink'},
-            {id: 2235, color: 'blue'}
+            {id: 2234, color: 'pink', image: "src/assets/images/Pink.svg", quantity: 50},
+            {id: 2235, color: 'blue', image: "src/assets/images/Blue.svg", quantity: 0},
+            {id: 2236, color: 'orange', image: "src/assets/images/Orange.svg", quantity: 2},
+            {id: 2237, color: 'yellow', image: "src/assets/images/Yellow.svg", quantity: 35},
+            {id: 2238, color: 'green', image: "src/assets/images/Green.svg", quantity: 7}
         ]
 
       };
@@ -43,8 +47,24 @@
     methods:{
       addToCart(){
         this.cart +=1
+      },
+      updateVariant(index){
+        this.selectedVariant = index;
+        console.log(index)
+      }
+    },
+    computed:{
+      title(){
+        return this.brand + " " + this.product
+      },
+      image(){
+        return this.variants[this.selectedVariant].image
+      },
+      InStock(){
+        return this.variants[this.selectedVariant].quantity
       }
     }
+    
   };
   </script>
   
@@ -67,11 +87,9 @@ img {
 }
 
 .nav-bar {
-  background: linear-gradient(-90deg, #84cf6a, #16c0b0);
+  background: linear-gradient(-90deg,#65dcf7, #a762ed, #eeb3e3);
   height: 60px;
   margin-bottom: 25px;
-  -webkit-box-shadow: 0px 2px 15px -12px rgba(0, 0, 0, 0.57);
-  -moz-box-shadow: 0px 2px 15px -12px rgba(0, 0, 0, 0.57);
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.57);
 }
 
