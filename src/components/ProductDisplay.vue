@@ -11,9 +11,10 @@
             <p v-else>Out of Stock</p>
             <p>Shipping: {{ shipping }}</p>
             <ul>
-                <li v-for="detail in details">{{ detail }}</li>
+                <li v-for="detail in details">● {{ detail }}</li>
             </ul>
-            <div  v-for="(variant, index) in variants" :key="variant.id" class="color-circle"  @mouseover="updateVariant(index)" :style="{backgroundColor: variant.color}"></div>
+            <div class="color-variants">
+            <div  v-for="(variant, index) in variants" :key="variant.id" class="color-circle"  @mouseover="updateVariant(index)" :style="{backgroundColor: variant.color}"></div></div>
             <button  v-on:click="addToCart" class="button" :class="{disabledButton: !InStock}" :disabled="!InStock">Add to Cart</button>
         </div>
     </div>
@@ -72,7 +73,7 @@ premium:{
 
   methods: {
     addToCart() {
-      this.cart += 1;
+      this.$emit('add-to-cart',this.variants[this.selectedVariant].id);
     },
     updateVariant(index) {
       this.selectedVariant = index;
@@ -81,7 +82,7 @@ premium:{
   },
   computed: {
     title() {
-      return this.brand + " " + this.product;
+      return this.brand + "- " + this.product;
     },
     image() {
       return this.variants[this.selectedVariant].image;
@@ -103,12 +104,20 @@ img {
   border: 2px solid #d8d8d8;
   width: 40%;
   margin: 40px;
+ 
   padding: 15px;
   -webkit-box-shadow: 0px 2px 15px -12px rgba(0, 0, 0, 0.57);
   -moz-box-shadow: 0px 2px 15px -12px rgba(0, 0, 0, 0.57);
   box-shadow: 2px 15px -12px rgba(0, 0, 0, 0.57);
 }
 
+.color-variants{
+
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 100px 100px;
+  
+}
 
 .product-display {
   display: flex;
@@ -125,27 +134,26 @@ img {
 .product-image,
 .product-info {
   width: 50%;
+ 
 }
 
 .color-circle {
-  width: 50px;
-  height: 50px;
+  width: 2.3rem;
+  height: 2.3rem;
   margin-top: 8px;
 
   border-radius: 50%;
 }
 .button {
-  margin: 30px;
+  margin: 1.3rem;
   background-color: #39495c;
   border-radius: 5px;
-  font-size: 18px;
-  width: 160px;
-  height: 60px;
+  font-size: 1rem;
+  width: 8rem;
+  height: 3.2rem;
   color: white;
-  padding: 20px;
-  box-shadow: inset 0 -0.6em 1em -0.35em rgba(0, 0, 0, 0.17),
-    inset 0 0.6em 2em -0.3em rgba(255, 255, 255, 0.15),
-    inset 0 0 0em 0.05em rgba(255, 255, 255, 0.12);
+  
+
   text-align: center;
   cursor: pointer;
 }
